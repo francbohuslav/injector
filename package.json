@@ -1,0 +1,38 @@
+{
+    "name": "injector",
+    "version": "1.0.0",
+    "description": "Dependency injection container for typescript",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "nodemon": "nodemon",
+        "test": "jest -c jest.config.js",
+        "test-watch": "jest -c jest.config.js --watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/francbohuslav/injector.git"
+    },
+    "keywords": [
+        "dependency",
+        "injection",
+        "container"
+    ],
+    "author": "Bogan <franc.bohuslav@gmail.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/francbohuslav/injector/issues"
+    },
+    "homepage": "https://github.com/francbohuslav/injector#readme",
+    "devDependencies": {
+        "@types/jest": "^27.0.2",
+        "jest": "^27.3.1",
+        "ts-jest": "^27.0.7",
+        "typescript": "^4.4.4"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.1.13"
+    }
+}
