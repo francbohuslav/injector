@@ -1,6 +1,8 @@
 import { Inject } from "../src/annotations";
 import { Container } from "../src/container";
 import { ScopeEnum } from "../src/interfaces";
+import utils from "../src/utils";
+import { DeepClass101 } from "./deep-classes";
 
 describe("Container resolving", () => {
     test("class tree", () => {
@@ -17,6 +19,13 @@ describe("Container resolving", () => {
         const instance1 = container.resolveClass(Child);
         const instance2 = container.resolveClass(Child);
         expect(instance1).toBe(instance2);
+    });
+
+    test("transient", () => {
+        const container = new Container();
+        const instance1 = container.resolveClass(Transient);
+        const instance2 = container.resolveClass(Transient);
+        expect(instance1).not.toBe(instance2);
     });
 
     test("scope change", () => {
@@ -40,6 +49,34 @@ describe("Container resolving", () => {
     });
 });
 
+describe("Errors", () => {
+    test("unknown class", () => {
+        const container = new Container();
+        expect(() => container.resolveClass(NotAnnotatedClass)).toThrow(/Unknown class/);
+    });
+
+    test("too deep", () => {
+        const container = new Container();
+        expect(() => container.resolveClass(DeepClass101)).toThrow(/Cycle detected/);
+    });
+
+    test("not value set", () => {
+        const container = new Container();
+        expect(() => container.resolveClass(Database)).toThrow(/Injection .* is not set/);
+    });
+
+    test("injection not defined", () => {
+        const container = new Container();
+        expect(() => container.resolveClass(InjectionMustBeDefined)).toThrow(/Injection must be defined/);
+    });
+
+    test("unknown scope", () => {
+        const container = new Container();
+        utils.getClassDefinition(Child).scope = "dsfd" as any;
+        expect(() => container.resolveClass(Parent)).toThrow(/Unknown scope/);
+    });
+});
+
 @Inject.Singleton
 class Child {
     constructor() {
@@ -60,4 +97,16 @@ class GrandParent {
 @Inject.Singleton
 class Database {
     constructor(@Inject.Value("connection") public connection: string) {}
+}
+
+class NotAnnotatedClass {}
+
+@Inject.Singleton
+class InjectionMustBeDefined {
+    constructor(public connection: string) {}
+}
+
+@Inject.Transient
+class Transient {
+    constructor(public child: Child, public anotherChild: Child) {}
 }

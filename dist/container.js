@@ -32,12 +32,12 @@ class Container {
     }
     resolveInternal(classType, depth = 100, parentPath = "") {
         if (depth <= 0) {
-            throw new Error(`Cycle detected or too much nested classes. Last class is ${classType.name}`);
+            throw new Error(`Cycle detected or too much nested classes. Class path is is ${parentPath}`);
         }
         const classKey = utils_1.default.getClassKey(classType);
         const definition = annotations_1.definitionIdentifiers[classKey];
         if (!definition) {
-            throw new Error(`Unknown class '${classType.name}'. Define some scope annotation for it. Path ${parentPath}`);
+            throw new Error(`Unknown class '${classType.name}'. Define some scope annotation for it. Parents are ${parentPath}`);
         }
         parentPath = classType.name + (parentPath ? ", " : "") + parentPath;
         const types = Reflect.getMetadata("design:paramtypes", classType);
@@ -80,7 +80,7 @@ class Container {
         throw new Error(`Unknown scope '${definition.scope}'`);
     }
     createInstance(classType, params = []) {
-        return params ? new classType(...params) : new classType();
+        return params && params.length ? new classType(...params) : new classType();
     }
 }
 exports.Container = Container;
