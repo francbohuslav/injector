@@ -9,10 +9,12 @@ export declare type IClassTyped<T> = new (...args: any[]) => T;
 export interface IDefinitionIdentifier {
     scope: ScopeEnum;
     parameterIdentifiers: string[];
+    factory: () => any;
 }
 export declare enum ScopeEnum {
     Singleton = 0,
-    Transient = 1
+    Transient = 1,
+    Custom = 2
 }
 export declare type IClassInstances = {
     [classKey: string]: IClassInstance;

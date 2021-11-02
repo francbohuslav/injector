@@ -70,3 +70,20 @@ const container = new Container();
 container.bindValue("connectionString", "localhost:27017");
 const instance = container.resolveClass(Database);
 ```
+
+## Bind custom instance factory
+
+```typescript
+import { Inject, Container } from "injector";
+
+// Singleton
+const container = new Container();
+const singleton = new SomeClass("some static params");
+container.bindClassFactory(SomeClass, () => singleton);
+const instance = container.resolveClass(SomeClass);
+
+// Transient
+const container = new Container();
+container.bindClassFactory(SomeClass, () => new SomeClass("some static params"));
+const instance = container.resolveClass(SomeClass);
+```

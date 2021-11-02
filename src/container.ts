@@ -25,9 +25,15 @@ export class Container {
         return this.resolveInternal(classType);
     }
 
-    public bindClass(classType: any, scope: ScopeEnum): void {
+    public bindClass<T>(classType: IClassTyped<T>, scope: ScopeEnum): void {
         const definition = utils.getClassDefinition(classType);
         definition.scope = scope;
+    }
+
+    public bindClassFactory<T>(classType: IClassTyped<T>, instance: () => T): void {
+        const definition = utils.getClassDefinition(classType);
+        definition.scope = ScopeEnum.Custom;
+        definition.factory = instance;
     }
 
     private resolveInternal(classType: IClass, depth: number = 100, parentPath: string = ""): any {
@@ -77,6 +83,8 @@ export class Container {
             return this.classInstances[classKey].instance;
         } else if (definition.scope == ScopeEnum.Transient) {
             return this.createInstance(classType, params);
+        } else if (definition.scope == ScopeEnum.Custom) {
+            return definition.factory();
         }
         throw new Error(`Unknown scope '${definition.scope}'`);
     }

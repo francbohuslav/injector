@@ -30,6 +30,11 @@ class Container {
         const definition = utils_1.default.getClassDefinition(classType);
         definition.scope = scope;
     }
+    bindClassFactory(classType, instance) {
+        const definition = utils_1.default.getClassDefinition(classType);
+        definition.scope = interfaces_1.ScopeEnum.Custom;
+        definition.factory = instance;
+    }
     resolveInternal(classType, depth = 100, parentPath = "") {
         if (depth <= 0) {
             throw new Error(`Cycle detected or too much nested classes. Class path is is ${parentPath}`);
@@ -76,6 +81,9 @@ class Container {
         }
         else if (definition.scope == interfaces_1.ScopeEnum.Transient) {
             return this.createInstance(classType, params);
+        }
+        else if (definition.scope == interfaces_1.ScopeEnum.Custom) {
+            return definition.factory();
         }
         throw new Error(`Unknown scope '${definition.scope}'`);
     }

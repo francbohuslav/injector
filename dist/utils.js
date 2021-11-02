@@ -10,6 +10,7 @@ class Utils {
         return {
             parameterIdentifiers: [],
             scope: this.defaultScope,
+            factory: null,
         };
     }
     getClassDefinition(classType) {

@@ -47,6 +47,14 @@ describe("Container resolving", () => {
         const instance = container.resolveClass(Database);
         expect(instance.connection).toBe("db:localhost");
     });
+
+    test("bind instance", () => {
+        const container = new Container();
+        const singleInstance = new ThirdParthClass("db:localhost");
+        container.bindClassFactory(ThirdParthClass, () => singleInstance);
+        const instance = container.resolveClass(UsesTPClass);
+        expect(instance.tpInstance.someValue).toBe("db:localhost");
+    });
 });
 
 describe("Errors", () => {
@@ -109,4 +117,13 @@ class InjectionMustBeDefined {
 @Inject.Transient
 class Transient {
     constructor(public child: Child, public anotherChild: Child) {}
+}
+
+class ThirdParthClass {
+    constructor(public someValue: string) {}
+}
+
+@Inject.Singleton
+class UsesTPClass {
+    constructor(public tpInstance: ThirdParthClass) {}
 }

@@ -15,7 +15,8 @@ export declare class Container {
      * @param classType Class
      */
     resolveClass<T>(classType: IClassTyped<T>): T;
-    bindClass(classType: any, scope: ScopeEnum): void;
+    bindClass<T>(classType: IClassTyped<T>, scope: ScopeEnum): void;
+    bindClassFactory<T>(classType: IClassTyped<T>, instance: () => T): void;
     private resolveInternal;
     private getInstance;
     private createInstance;
